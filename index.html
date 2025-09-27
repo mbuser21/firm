@@ -61,6 +61,11 @@
             -webkit-appearance: none;
             -moz-appearance: none;
         }
+        /* Overriding text alignment for the KG input on the main form */
+        #mainContent input[type="number"],
+        #mainContent select {
+            text-align: center; 
+        }
 
         /* Styles for the submit button (darker green, kept prominent) */
         .btn-submit {
@@ -89,12 +94,50 @@
         .icon-stroke {
             stroke: #1e6d42; /* Dark green for the icon stroke */
         }
+
+        /* Password input specific styling */
+        #passwordInput {
+            text-align: center;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- Main Container aligned to the image provided -->
-    <div class="container bg-white rounded-2xl p-8 shadow-xl w-full">
+    <!-- Authentication Screen (Default View) -->
+    <div id="authScreen" class="container bg-white rounded-2xl p-8 shadow-xl w-full">
+        <div class="flex flex-col items-center justify-center mb-10">
+            <h1 class="text-3xl font-bold header-text mb-4">
+                Access Required
+            </h1>
+            <p class="text-gray-500">Enter your secret code to proceed.</p>
+        </div>
+
+        <form id="authForm" class="space-y-5">
+            <input 
+                type="password" 
+                id="passwordInput" 
+                name="password" 
+                placeholder="Password" 
+                required
+                class="control-base input-minimal h-16"
+            >
+
+            <button 
+                type="submit" 
+                id="authButton" 
+                class="control-base btn-submit h-16 mt-6"
+            >
+                Unlock
+            </button>
+        </form>
+        
+        <!-- Authentication Message Box -->
+        <div id="authMessageBox" class="mt-6 p-4 rounded-lg hidden text-center transition-opacity duration-300"></div>
+    </div>
+
+
+    <!-- Main Content Container (Hidden until logged in) -->
+    <div id="mainContent" class="container bg-white rounded-2xl p-8 shadow-xl w-full hidden">
 
         <!-- Header/Icon Section -->
         <div class="flex flex-col items-center justify-center mb-10">
@@ -172,7 +215,53 @@
     </div>
 
     <script>
-        // IMPORTANT: The Google Apps Script URL has been updated with your provided link.
+        // --- Authentication Setup ---
+        const SECRET_PASSWORD = 'GAZI'; // Updated secret password to 'GAZI'
+        const authScreen = document.getElementById('authScreen');
+        const mainContent = document.getElementById('mainContent');
+        const authForm = document.getElementById('authForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const authMessageBox = document.getElementById('authMessageBox');
+
+        /**
+         * Displays a temporary notification message for authentication.
+         * @param {string} message - The message content.
+         * @param {string} type - 'success' or 'error'.
+         */
+        function showAuthMessage(message, type) {
+            authMessageBox.textContent = message;
+            authMessageBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+
+            if (type === 'success') {
+                authMessageBox.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                authMessageBox.classList.add('bg-red-100', 'text-red-800');
+            }
+            
+            // Clear message after 5 seconds
+            setTimeout(() => {
+                authMessageBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        authForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const enteredPassword = passwordInput.value.trim();
+
+            if (enteredPassword === SECRET_PASSWORD) {
+                // Successful login
+                authScreen.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                passwordInput.value = ''; // Clear password field
+            } else {
+                // Failed login
+                showAuthMessage('Invalid password. Please try again.', 'error');
+                passwordInput.value = ''; // Clear password field
+                passwordInput.focus();
+            }
+        });
+
+        // --- Data Submission Setup ---
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwylRYWkg19TtSY1IkbAcGyroymr-izL2My2BlHsBWOLCdy6zcheaWU7s69kKs3YQJV/exec'; 
 
         const form = document.getElementById('collectionForm');
