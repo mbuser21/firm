@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Collection</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and scrollbar customization */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fcf9; /* Very light, off-white background */
+        }
+        .container {
+            max-width: 400px; /* Mobile width constraint */
+        }
+        /* Custom styles to closely match the image's aesthetic */
+        .header-text {
+            color: #1e6d42; /* Darker green for text */
+        }
+        .icon-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #5aa77a; /* Medium green border */
+            padding: 10px;
+        }
+        
+        /* Base styles for all form controls and buttons */
+        .control-base {
+            padding: 1rem 1.5rem;
+            width: 100%;
+            border-radius: 0.75rem; /* Slightly reduced rounding for minimalism */
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        /* Minimal style for the select and amount fields (Inputs) */
+        .input-minimal {
+            background-color: white; 
+            border: 1px solid #d1d5db; /* Light gray border */
+            color: #1e6d42; /* Darker green text color */
+            text-align: left;
+            cursor: pointer;
+            box-shadow: none; /* Remove shadows */
+        }
+        .input-minimal:focus {
+            outline: none;
+            border-color: #4a906e; /* Focus color */
+            ring: 2px;
+            ring-color: #4a906e;
+        }
+        .input-minimal::placeholder {
+            color: #a0a0a0; /* Light gray placeholder */
+        }
+        /* Custom appearance removal for select/number */
+        .input-minimal.select-field {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Styles for the submit button (darker green, kept prominent) */
+        .btn-submit {
+            background-color: #1e6d42; /* Darker Green */
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .btn-submit:hover:not(:disabled) {
+            background-color: #4a906e;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Hidden spin buttons for number input */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        /* Style for the custom icon SVG stroke */
+        .icon-stroke {
+            stroke: #1e6d42; /* Dark green for the icon stroke */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Container aligned to the image provided -->
+    <div class="container bg-white rounded-2xl p-8 shadow-xl w-full">
+
+        <!-- Header/Icon Section -->
+        <div class="flex flex-col items-center justify-center mb-10">
+            <!-- Placeholder for the Icon (Using SVG to match the line art) -->
+            <div class="icon-circle flex items-center justify-center mb-6">
+                <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Custom line art face icon -->
+                    <circle cx="50" cy="50" r="40" stroke-width="4" class="icon-stroke opacity-75"/>
+                    <path d="M 30 55 Q 50 45 70 55" stroke-width="2" class="icon-stroke"/>
+                    <path d="M 40 70 A 10 5 0 0 0 60 70" stroke-width="3" class="icon-stroke"/>
+                    <path d="M 35 30 C 35 40 45 40 50 30 C 55 40 65 40 65 30" stroke-width="2" class="icon-stroke"/>
+                </svg>
+            </div>
+            
+            <h1 class="text-4xl font-bold header-text">
+                Daily Collection
+            </h1>
+        </div>
+
+        <!-- Form Section -->
+        <form id="collectionForm" class="space-y-5">
+            
+            <!-- Select Field (Code Name) -->
+            <div class="relative">
+                <select 
+                    id="optionName" 
+                    name="optionName" 
+                    class="control-base input-minimal select-field text-center h-16"
+                    required
+                >
+                    <option value="" disabled selected>Select Code Name</option>
+                    <!-- Options for CW 101, CW 102, etc. -->
+                    <option value="CW 101">CW 101</option>
+                    <option value="CW 102">CW 102</option>
+                    <option value="CW 103">CW 103</option>
+                    <option value="CW 104">CW 104</option>
+                    <option value="CW 105">CW 105</option>
+                    <option value="CW 106">CW 106</option>
+                    <option value="CW 107">CW 107</option>
+                    <option value="CW 108">CW 108</option>
+                    <option value="CW 109">CW 109</option>
+                    <option value="CW 110">CW 110</option>
+                </select>
+                <!-- Custom Down Arrow Icon (now dark green to match text) -->
+                <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-600 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+
+            <!-- KG Input Field -->
+            <input 
+                type="number" 
+                id="kg" 
+                name="kg" 
+                placeholder="KG" 
+                min="0"
+                step="0.01"
+                required
+                class="control-base input-minimal text-center h-16"
+            >
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                id="submitButton" 
+                class="control-base btn-submit h-16 mt-6"
+            >
+                Submit
+            </button>
+        </form>
+
+        <!-- Notification/Message Box -->
+        <div id="messageBox" class="mt-6 p-4 rounded-lg hidden text-center transition-opacity duration-300"></div>
+
+    </div>
+
+    <script>
+        // IMPORTANT: Replace this placeholder with the actual Web App URL from your deployed Google Apps Script
+        const GOOGLE_APPS_SCRIPT_URL = 'YOUR_DEPLOYED_APPS_SCRIPT_URL'; 
+
+        const form = document.getElementById('collectionForm');
+        const submitButton = document.getElementById('submitButton');
+        const messageBox = document.getElementById('messageBox');
+        
+        /**
+         * Converts a standard form object into a URL-encoded string for submission.
+         * @param {FormData} data - The FormData object from the form.
+         * @returns {string} The URL-encoded key-value pair string.
+         */
+        function toUrlEncoded(data) {
+            const params = [];
+            for (const pair of data.entries()) {
+                params.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+            }
+            return params.join('&');
+        }
+
+        /**
+         * Displays a temporary notification message to the user.
+         * @param {string} message - The message content.
+         * @param {string} type - 'success' or 'error' to determine styling.
+         */
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                messageBox.classList.add('bg-red-100', 'text-red-800');
+            }
+            
+            // Clear message after 5 seconds
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            messageBox.classList.add('hidden'); // Clear previous message
+            
+            const formData = new FormData(form);
+            const urlEncodedData = toUrlEncoded(formData);
+
+            if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_DEPLOYED_APPS_SCRIPT_URL') {
+                showMessage("ERROR: Please update GOOGLE_APPS_SCRIPT_URL in the script.", 'error');
+                submitButton.textContent = 'Submit';
+                submitButton.disabled = false;
+                return;
+            }
+
+            try {
+                // Use fetch to send the data as a POST request
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors', // Crucial for cross-origin requests
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: urlEncodedData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'SUCCESS') {
+                    showMessage('Submission successful! ' + result.message, 'success');
+                    // Reset the form fields after successful submission
+                    form.reset();
+                    // Re-select the "Select Option" placeholder
+                    document.getElementById('optionName').value = ""; 
+                } else {
+                    showMessage('Submission failed: ' + (result.message || 'Server returned an error.'), 'error');
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showMessage('An error occurred while connecting to the server. Check console for details.', 'error');
+            } finally {
+                submitButton.textContent = 'Submit';
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Collection</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and scrollbar customization */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fcf9; /* Very light, off-white background */
+        }
+        .container {
+            max-width: 400px; /* Mobile width constraint */
+        }
+        /* Custom styles to closely match the image's aesthetic */
+        .header-text {
+            color: #1e6d42; /* Darker green for text */
+        }
+        .icon-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #5aa77a; /* Medium green border */
+            padding: 10px;
+        }
+        
+        /* Base styles for all form controls and buttons */
+        .control-base {
+            padding: 1rem 1.5rem;
+            width: 100%;
+            border-radius: 0.75rem; /* Slightly reduced rounding for minimalism */
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        /* Minimal style for the select and amount fields (Inputs) */
+        .input-minimal {
+            background-color: white; 
+            border: 1px solid #d1d5db; /* Light gray border */
+            color: #1e6d42; /* Darker green text color */
+            text-align: left;
+            cursor: pointer;
+            box-shadow: none; /* Remove shadows */
+        }
+        .input-minimal:focus {
+            outline: none;
+            border-color: #4a906e; /* Focus color */
+            ring: 2px;
+            ring-color: #4a906e;
+        }
+        .input-minimal::placeholder {
+            color: #a0a0a0; /* Light gray placeholder */
+        }
+        /* Custom appearance removal for select/number */
+        .input-minimal.select-field {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Styles for the submit button (darker green, kept prominent) */
+        .btn-submit {
+            background-color: #1e6d42; /* Darker Green */
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .btn-submit:hover:not(:disabled) {
+            background-color: #4a906e;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Hidden spin buttons for number input */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        /* Style for the custom icon SVG stroke */
+        .icon-stroke {
+            stroke: #1e6d42; /* Dark green for the icon stroke */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Container aligned to the image provided -->
+    <div class="container bg-white rounded-2xl p-8 shadow-xl w-full">
+
+        <!-- Header/Icon Section -->
+        <div class="flex flex-col items-center justify-center mb-10">
+            <!-- Placeholder for the Icon (Using SVG to match the line art) -->
+            <div class="icon-circle flex items-center justify-center mb-6">
+                <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Custom line art face icon -->
+                    <circle cx="50" cy="50" r="40" stroke-width="4" class="icon-stroke opacity-75"/>
+                    <path d="M 30 55 Q 50 45 70 55" stroke-width="2" class="icon-stroke"/>
+                    <path d="M 40 70 A 10 5 0 0 0 60 70" stroke-width="3" class="icon-stroke"/>
+                    <path d="M 35 30 C 35 40 45 40 50 30 C 55 40 65 40 65 30" stroke-width="2" class="icon-stroke"/>
+                </svg>
+            </div>
+            
+            <h1 class="text-4xl font-bold header-text">
+                Daily Collection
+            </h1>
+        </div>
+
+        <!-- Form Section -->
+        <form id="collectionForm" class="space-y-5">
+            
+            <!-- Select Field (Code Name) -->
+            <div class="relative">
+                <select 
+                    id="optionName" 
+                    name="optionName" 
+                    class="control-base input-minimal select-field text-center h-16"
+                    required
+                >
+                    <option value="" disabled selected>Select Code Name</option>
+                    <!-- Options for CW 101, CW 102, etc. -->
+                    <option value="CW 101">CW 101</option>
+                    <option value="CW 102">CW 102</option>
+                    <option value="CW 103">CW 103</option>
+                    <option value="CW 104">CW 104</option>
+                    <option value="CW 105">CW 105</option>
+                    <option value="CW 106">CW 106</option>
+                    <option value="CW 107">CW 107</option>
+                    <option value="CW 108">CW 108</option>
+                    <option value="CW 109">CW 109</option>
+                    <option value="CW 110">CW 110</option>
+                </select>
+                <!-- Custom Down Arrow Icon (now dark green to match text) -->
+                <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-600 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+
+            <!-- KG Input Field -->
+            <input 
+                type="number" 
+                id="kg" 
+                name="kg" 
+                placeholder="KG" 
+                min="0"
+                step="0.01"
+                required
+                class="control-base input-minimal text-center h-16"
+            >
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                id="submitButton" 
+                class="control-base btn-submit h-16 mt-6"
+            >
+                Submit
+            </button>
+        </form>
+
+        <!-- Notification/Message Box -->
+        <div id="messageBox" class="mt-6 p-4 rounded-lg hidden text-center transition-opacity duration-300"></div>
+
+    </div>
+
+    <script>
+        // IMPORTANT: Replace this placeholder with the actual Web App URL from your deployed Google Apps Script
+        const GOOGLE_APPS_SCRIPT_URL = 'YOUR_DEPLOYED_APPS_SCRIPT_URL'; 
+
+        const form = document.getElementById('collectionForm');
+        const submitButton = document.getElementById('submitButton');
+        const messageBox = document.getElementById('messageBox');
+        
+        /**
+         * Converts a standard form object into a URL-encoded string for submission.
+         * @param {FormData} data - The FormData object from the form.
+         * @returns {string} The URL-encoded key-value pair string.
+         */
+        function toUrlEncoded(data) {
+            const params = [];
+            for (const pair of data.entries()) {
+                params.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+            }
+            return params.join('&');
+        }
+
+        /**
+         * Displays a temporary notification message to the user.
+         * @param {string} message - The message content.
+         * @param {string} type - 'success' or 'error' to determine styling.
+         */
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                messageBox.classList.add('bg-red-100', 'text-red-800');
+            }
+            
+            // Clear message after 5 seconds
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            messageBox.classList.add('hidden'); // Clear previous message
+            
+            const formData = new FormData(form);
+            const urlEncodedData = toUrlEncoded(formData);
+
+            if (GOOGLE_APPS_SCRIPT_URL === 'YOUR_DEPLOYED_APPS_SCRIPT_URL') {
+                showMessage("ERROR: Please update GOOGLE_APPS_SCRIPT_URL in the script.", 'error');
+                submitButton.textContent = 'Submit';
+                submitButton.disabled = false;
+                return;
+            }
+
+            try {
+                // Use fetch to send the data as a POST request
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors', // Crucial for cross-origin requests
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: urlEncodedData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.status === 'SUCCESS') {
+                    showMessage('Submission successful! ' + result.message, 'success');
+                    // Reset the form fields after successful submission
+                    form.reset();
+                    // Re-select the "Select Option" placeholder
+                    document.getElementById('optionName').value = ""; 
+                } else {
+                    showMessage('Submission failed: ' + (result.message || 'Server returned an error.'), 'error');
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showMessage('An error occurred while connecting to the server. Check console for details.', 'error');
+            } finally {
+                submitButton.textContent = 'Submit';
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
